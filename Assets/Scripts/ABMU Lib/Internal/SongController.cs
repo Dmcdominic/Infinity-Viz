@@ -14,15 +14,15 @@ public class SongController : MonoBehaviour {
 	SpectralFluxAnalyzer realTimeSpectralFluxAnalyzer;
 	PlotController realTimePlotController;
 
-	int numChannels;
-	int numTotalSamples;
-	int sampleRate;
-	float clipLength;
-	float[] multiChannelSamples;
-	SpectralFluxAnalyzer preProcessedSpectralFluxAnalyzer;
+	public int numChannels;
+	public int numTotalSamples;
+	public int sampleRate;
+	public float clipLength;
+	public float[] multiChannelSamples;
+	public SpectralFluxAnalyzer preProcessedSpectralFluxAnalyzer;
 	PlotController preProcessedPlotController;
 
-	AudioSource audioSource;
+	public AudioSource audioSource;
 
 	public bool realTimeSamples = true;
 	public bool preProcessSamples = false;
@@ -34,7 +34,7 @@ public class SongController : MonoBehaviour {
 		if (realTimeSamples) {
 			realTimeSpectrum = new float[1024];
 			realTimeSpectralFluxAnalyzer = new SpectralFluxAnalyzer ();
-			realTimePlotController = GameObject.Find ("RealtimePlot").GetComponent<PlotController> ();
+			realTimePlotController = GameObject.Find ("RealtimePlot")?.GetComponent<PlotController> ();
 
 			this.sampleRate = AudioSettings.outputSampleRate;
 		}
@@ -42,7 +42,7 @@ public class SongController : MonoBehaviour {
 		// Preprocess entire audio file upfront
 		if (preProcessSamples) {
 			preProcessedSpectralFluxAnalyzer = new SpectralFluxAnalyzer ();
-			preProcessedPlotController = GameObject.Find ("PreprocessedPlot").GetComponent<PlotController> ();
+			preProcessedPlotController = GameObject.Find ("PreprocessedPlot")?.GetComponent<PlotController> ();
 
 			// Need all audio samples.  If in stereo, samples will return with left and right channels interweaved
 			// [L,R,L,R,L,R]
@@ -69,20 +69,24 @@ public class SongController : MonoBehaviour {
 		if (realTimeSamples) {
 			audioSource.GetSpectrumData (realTimeSpectrum, 0, FFTWindow.BlackmanHarris);
 			realTimeSpectralFluxAnalyzer.analyzeSpectrum (realTimeSpectrum, audioSource.time);
-			realTimePlotController.updatePlot (realTimeSpectralFluxAnalyzer.spectralFluxSamples);
+			if (realTimePlotController) {
+				realTimePlotController.updatePlot(realTimeSpectralFluxAnalyzer.spectralFluxSamples);
+			}
 		}
 
 		// Preprocessed
 		if (preProcessSamples) {
-			int indexToPlot = getIndexFromTime (audioSource.time) / 1024;
-			preProcessedPlotController.updatePlot (preProcessedSpectralFluxAnalyzer.spectralFluxSamples, indexToPlot);
+			int indexToPlot = getIndexFromTime (audioSource.time);
+			if (preProcessedPlotController) {
+				preProcessedPlotController.updatePlot(preProcessedSpectralFluxAnalyzer.spectralFluxSamples, indexToPlot);
+			}
 		}
 	}
 
 	public int getIndexFromTime(float curTime) {
 		float lengthPerSample = this.clipLength / (float)this.numTotalSamples;
 
-		return Mathf.FloorToInt (curTime / lengthPerSample);
+		return Mathf.FloorToInt (curTime / lengthPerSample) / 1024;
 	}
 
 	public float getTimeFromIndex(int index) {

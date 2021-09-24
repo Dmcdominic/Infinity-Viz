@@ -31,8 +31,8 @@ public class PlotController : MonoBehaviour {
 			return;
 
 		int numPlotted = 0;
-		int windowStart = 0;
-		int windowEnd = 0;
+		int windowStart;
+		int windowEnd;
 
 		if (curIndex > 0) {
 			windowStart = Mathf.Max (0, curIndex - displayWindowSize / 2);
