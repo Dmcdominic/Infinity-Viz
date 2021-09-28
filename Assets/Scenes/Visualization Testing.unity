@@ -155,8 +155,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d8a0d963f4fbe4dbe038f3e1209d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxScale: 2
-  minScale: 0.5
+  scalarInput: 0
+  scaleMode: 1
+  decayRate: 2
+  gainRate: 10
+  freqBandToggles:
+    SubBass: 0
+    Bass: 0
+    LowMidrange: 1
+    Midrange: 1
+    UpperMidrange: 1
+    Presence: 0
+    Brilliance: 0
+  audioSource: {fileID: 1454172141}
   songController: {fileID: 1454172142}
 --- !u!136 &618126502
 CapsuleCollider:
@@ -357,7 +368,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ab7806a48a3e876458291ae9b68029d9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 39614ca917753b64695354f3e2675bfb, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
